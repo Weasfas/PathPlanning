@@ -1,4 +1,4 @@
-package astar_planif;
+package planExample;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -9,10 +9,10 @@ import java.util.*;
 
 /**
  * @author David Yague Cuevas
- * @version 1.5
+ * @version 1.6
  * @Description A* Algorithm to solve a Path motion maze with n goals and 1 Source. Only vertical and horizontal movement is allowed.
  * @Input File where the maze is constructed
- * @Output 3 Files: Solved maze with the heuristic required and 1 final file with execution statistics.
+ * @Output 2 Files: Solved maze with the heuristic required and 1 final file with execution statistics.
  * @since 18/10/2018
  */
 public class AStarPlanner {
@@ -35,10 +35,30 @@ public class AStarPlanner {
 	static int endI, endJ; //End position: row and column.
 	static int costSoFar=0; //Total final cost of the path.
 	static int n_Expanded = 0; //Total number of nodes expanded.
-	static long execTime = 0; //Total execution time of the search.
+	long execTime = 0; //Total execution time of the search.
 	static int n_goals = 0; //Total number of goals.
 	static String H_name; //Name of the heuristic A* is going to use.
 
+	public ArrayList<Integer> getOrder(){
+		return order;
+	}
+	
+	public ArrayList<Cell> getPath(){
+		return path;
+	}
+	
+	public Cell [][] getGrid(){
+		return grid;
+	}
+	
+	public int getH(){
+		return height;
+	}
+	
+	public int getW(){
+		return width;
+	}
+	
 	/**
 	 * @Description: AstartPlanner constructor to solve the problem.
 	 * @Param: fileName: Path of the file where the maze layout is, heuristic: Name of the heuristic to use.
@@ -618,7 +638,7 @@ public class AStarPlanner {
 
 	}
 
-	public static void main(String[] args) throws Exception{   
+	/*public static void main(String[] args) throws Exception{   
 
 		try{
 
@@ -636,5 +656,5 @@ public class AStarPlanner {
 		}catch(Exception e){
 			System.err.println("Bad argument. Try again.");
 		}
-	}
+	}*/
 }

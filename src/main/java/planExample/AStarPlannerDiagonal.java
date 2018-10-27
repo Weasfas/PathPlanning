@@ -1,4 +1,4 @@
-package astar_planif;
+package planExample;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -9,21 +9,21 @@ import java.util.*;
 
 /**
  * @author David Yague Cuevas
- * @version 1.5
+ * @version 1.6
  * @Description A* Algorithm to solve a Path motion maze with n goals and 1 Source. Allowed Horizontal and vertical movement
  * as well as diagonal.
  * @Input File where the maze is constructed
- * @Output 3 Files: Solved maze with the heuristic required and 1 final file with execution statistics.
+ * @Output 2 Files: Solved maze with the heuristic required and 1 final file with execution statistics.
  * @since 18/10/2018
  */
 
 public class AStarPlannerDiagonal {
 
-	static Cell [][] grid = null; //Grid to store the maze; A Cell can be blocked: doing so its value will be set to null.
+	static CellD [][] grid = null; //Grid to store the maze; A Cell can be blocked: doing so its value will be set to null.
 	private int height = 0;	//height of the matrix == number of rows.
 	private int width  = 0; //width of the matrix == number of columns.
-	private static ArrayList<Cell> goals = new ArrayList<Cell>(); //List of goals.
-	private static ArrayList<Cell> path = new ArrayList<Cell>(); //Path given by the search.
+	private static ArrayList<CellD> goals = new ArrayList<CellD>(); //List of goals.
+	private static ArrayList<CellD> path = new ArrayList<CellD>(); //Path given by the search.
 	private static ArrayList<Integer> distances = new ArrayList<Integer>(); //List of distances.
 	private static ArrayList<Integer> order = new ArrayList<Integer>(); //List to order the distances.
 	/* Unbounded priority queue based on a priority heap
@@ -31,16 +31,36 @@ public class AStarPlannerDiagonal {
 	 * linear time for the remove and contains methods
 	 * and constant time for the retrieval methods.
 	 * */
-	static PriorityQueue<Cell> open; //Fibonacci Heap to store open nodes.
+	static PriorityQueue<CellD> open; //Fibonacci Heap to store open nodes.
 	static boolean closed[][]; //Set of nodes already evaluated.
 	static int startI, startJ; //Start position: row and column.
 	static int endI, endJ; //End position: row and column.
 	static int costSoFar=0; //Total final cost of the path.
 	static int n_Expanded = 0; //Total number of nodes expanded.
-	static long execTime = 0; //Total execution time of the search.
+	long execTime = 0; //Total execution time of the search.
 	static int n_goals = 0; //Total number of goals.
 	static String H_name; //Name of the heuristic A* is going to use.
 
+	public ArrayList<Integer> getOrder(){
+		return order;
+	}
+	
+	public ArrayList<CellD> getPath(){
+		return path;
+	}
+	
+	public CellD [][] getGrid(){
+		return grid;
+	}
+	
+	public int getH(){
+		return height;
+	}
+	
+	public int getW(){
+		return width;
+	}
+	
 	/**
 	 * @Description: AstartPlannerDiagonal constructor to solve the problem.
 	 * @Param: fileName: Path of the file where the maze layout is, heuristic: Name of the heuristic to use.
@@ -71,7 +91,7 @@ public class AStarPlannerDiagonal {
 					}else if(grid[i][j]!=null){ //Otherwise
 
 						while(count<goals.size()){ //For each of the goals we have.
-							Cell goal = goals.get(count); //Get the cell.
+							CellD goal = goals.get(count); //Get the cell.
 							int distance = Math.abs(i-goal.j)+Math.abs(j-goal.i); //Calculate the Manhattan distance.
 							distances.add(distance); //Store the distance.
 							count++;
@@ -104,7 +124,7 @@ public class AStarPlannerDiagonal {
 					}else if(grid[i][j]!=null){
 						int h = grid[i][j].heuristicCost;
 						while(count<goals.size()){
-							Cell goal = goals.get(count);
+							CellD goal = goals.get(count);
 							int dx1 = i-goal.i;
 							int dy1 = j-goal.j;
 							int dx2 = startI-goal.i;
@@ -139,7 +159,7 @@ public class AStarPlannerDiagonal {
 					}else if(grid[i][j]!=null){
 						int h = grid[i][j].heuristicCost;
 						while(count<goals.size()){
-							Cell goal = goals.get(count);
+							CellD goal = goals.get(count);
 							int dx = Math.abs(i-goal.i);
 							int dy = Math.abs(j-goal.j);
 							if(dx>dy){
@@ -226,7 +246,7 @@ public class AStarPlannerDiagonal {
 			int num = 0;
 
 			//Create the grid to fill and the closed set of cells to support the search.
-			grid = new Cell[height][width];
+			grid = new CellD[height][width];
 			closed = new boolean[height][width];
 
 			//Loop to read each line of the file.
@@ -236,7 +256,7 @@ public class AStarPlannerDiagonal {
 				//Loop to fill the grid depending on the value stored in the file.
 				for(int i=0;i<ch2.length;++i){
 					//Create the cell.
-					grid[num][i] = new Cell(num, i);
+					grid[num][i] = new CellD(num, i);
 					//Set the value attribute of the cell.
 					if(ch2[i]=='S'){
 						setStartCell(num, i);
@@ -297,8 +317,8 @@ public class AStarPlannerDiagonal {
 			//Reset closed and open set.
 			closed = new boolean[height][width];
 			open = new PriorityQueue<>((Object o1, Object o2) -> {
-				Cell c1 = (Cell)o1;
-				Cell c2 = (Cell)o2;
+				CellD c1 = (CellD)o1;
+				CellD c2 = (CellD)o2;
 
 				return c1.finalCost<c2.finalCost?-1:
 					c1.finalCost>c2.finalCost?1:0;
@@ -325,7 +345,7 @@ public class AStarPlannerDiagonal {
 			//Trace back the path
 			if(closed[endI][endJ]){
 
-				Cell current = grid[endI][endJ];
+				CellD current = grid[endI][endJ];
 				//Add the current node to the path list.
 				path.add(current);
 				while(current.parent!=null){					
@@ -422,16 +442,16 @@ public class AStarPlannerDiagonal {
 	/**
 	 * @Description: Cell class, each position of the maze is a cell.
 	 */
-	static class Cell {  
+	static class CellD {  
 		int heuristicCost = 0; //This is the heuristic cost of the cell.
 		int finalCost = 0; //This is the evaluation function of the cell--> g + h.
 		int i, j; //Variables to define the positions --> row(i), column(j).
 		char value = ' '; //Specific value of the cell --> by default it is assumed to be blank space.
 		int costMove = 4; //Cost of the movement to cell --> since it is assumed a black space, the cost of movement must be 4.	
-		Cell parent; //Parent cell of the cell --> Use to reconstruct the path A* found.
+		CellD parent; //Parent cell of the cell --> Use to reconstruct the path A* found.
 
 		//Constructor - A cell is defined by its position within the maze.
-		Cell(int i, int j){
+		CellD(int i, int j){
 			this.i = i;
 			this.j = j;
 		}
@@ -467,9 +487,9 @@ public class AStarPlannerDiagonal {
 		@Override
 		public boolean equals(Object o){
 			boolean same = false;
-			if(o!=null && o instanceof Cell){
-				boolean sameI = this.i == ((Cell) o).i;
-				boolean sameJ = this.j == ((Cell) o).j;
+			if(o!=null && o instanceof CellD){
+				boolean sameI = this.i == ((CellD) o).i;
+				boolean sameJ = this.j == ((CellD) o).j;
 				same = sameI && sameJ;
 			}
 			return same;
@@ -495,7 +515,7 @@ public class AStarPlannerDiagonal {
 	}
 
 	//Method to check values and update costs if necessary.
-	static void checkAndUpdateCost(Cell current, Cell t, int cost){
+	static void checkAndUpdateCost(CellD current, CellD t, int cost){
 		if(t == null || closed[t.i][t.j])return; //If the cell is blocked or it is already closed --> nothing to update.
 		int t_final_cost = t.heuristicCost+cost; //Update the Cell cost.
 
@@ -514,7 +534,7 @@ public class AStarPlannerDiagonal {
 		open.add(grid[startI][startJ]);
 
 		//Current cell.
-		Cell current;
+		CellD current;
 
 		//Endless loop
 		while(!open.isEmpty()){ 
@@ -531,7 +551,7 @@ public class AStarPlannerDiagonal {
 			}
 
 			//Check neighbors
-			Cell t;int cost=0;  
+			CellD t;int cost=0;  
 			if(current.i-1>=0){
 				t = grid[current.i-1][current.j];
 				if(t!=null)cost=t.costMove;
@@ -682,7 +702,7 @@ public class AStarPlannerDiagonal {
 
 	}
 
-	public static void main(String[] args) throws Exception{   
+	/*public static void main(String[] args) throws Exception{   
 
 		try{
 
@@ -700,5 +720,5 @@ public class AStarPlannerDiagonal {
 		}catch(Exception e){
 			System.err.println("Bad argument. Try again.");
 		}
-	}
+	}*/
 }
