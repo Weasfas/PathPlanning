@@ -11,6 +11,7 @@ import org.bytedeco.javacpp.opencv_highgui;
 import org.bytedeco.javacpp.opencv_imgcodecs;
 import org.bytedeco.javacpp.opencv_imgproc;
 
+import chooserUI.ChooserUI;
 import planExample.AStarPlanner;
 import planExample.AStarPlannerDiagonal;
 import planExample.AStarPlanner.Cell;
@@ -176,7 +177,12 @@ public class test {
 			opencv_highgui.waitKey();
 			opencv_highgui.destroyAllWindows();
 
-			opencv_imgcodecs.imwrite("Map_with_path.bmp", mat);
+			String pah = test.class.getProtectionDomain().getCodeSource().getLocation().getPath();
+			pah = pah + "Map_with_path.bmp";
+			
+			opencv_imgcodecs.imwrite(pah, mat);
+			
+			System.out.println("Search image write in: " + pah);
 
 		}catch (IndexOutOfBoundsException r){
 			System.err.println("Bad argumentss. Try again." + r.getCause());
@@ -319,9 +325,12 @@ public class test {
 	
 	public static void main(String[] args) throws Exception {
 
-		String path = args[0];		//Layout Path
-		String heurist = args[1];	//Heuristic function to use
-		String tipo = args[2];		//Type of planner to use
+		ChooserUI chooser = new ChooserUI();
+		chooser.runChooser();
+		
+		String path = chooser.path;                //args[0];		//Layout Path
+		String heurist = chooser.heuristic;        //args[1];	//Heuristic function to use
+		String tipo = chooser.mode;                // args[2];		//Type of planner to use
 
 		
 		if(tipo.equals("D")){ //AStarDiagonal
@@ -369,6 +378,8 @@ public class test {
 		}else {
 			throw new Exception();
 		}
+		
+		System.exit(0);
 		
 	}
 
