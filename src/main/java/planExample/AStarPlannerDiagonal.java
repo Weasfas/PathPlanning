@@ -8,24 +8,24 @@ import java.io.PrintWriter;
 import java.util.*;
 
 /**
- * @author David Yague Cuevas
+ * @author David Yagüe Cuevas
  * @version 1.6
  * @Description A* Algorithm to solve a Path motion maze with n goals and 1 Source. Allowed Horizontal and vertical movement
  * as well as diagonal.
  * @Input File where the maze is constructed
  * @Output 2 Files: Solved maze with the heuristic required and 1 final file with execution statistics.
  * @since 18/10/2018
- */
+*/
 
 public class AStarPlannerDiagonal {
 
 	static CellD [][] grid = null; //Grid to store the maze; A Cell can be blocked: doing so its value will be set to null.
 	private int height = 0;	//height of the matrix == number of rows.
 	private int width  = 0; //width of the matrix == number of columns.
-	private static ArrayList<CellD> goals = new ArrayList<CellD>(); //List of goals.
-	private static ArrayList<CellD> path = new ArrayList<CellD>(); //Path given by the search.
-	private static ArrayList<Integer> distances = new ArrayList<Integer>(); //List of distances.
-	private static ArrayList<Integer> order = new ArrayList<Integer>(); //List to order the distances.
+	private ArrayList<CellD> goals = new ArrayList<CellD>(); //List of goals.
+	private ArrayList<CellD> path = new ArrayList<CellD>(); //Path given by the search.
+	private ArrayList<Integer> distances = new ArrayList<Integer>(); //List of distances.
+	private ArrayList<Integer> order = new ArrayList<Integer>(); //List to order the distances.
 	/* Unbounded priority queue based on a priority heap
 	 * provides O(log(n)) time for the enqueing and dequeing methods
 	 * linear time for the remove and contains methods
@@ -35,11 +35,11 @@ public class AStarPlannerDiagonal {
 	static boolean closed[][]; //Set of nodes already evaluated.
 	static int startI, startJ; //Start position: row and column.
 	static int endI, endJ; //End position: row and column.
-	static int costSoFar=0; //Total final cost of the path.
-	static int n_Expanded = 0; //Total number of nodes expanded.
+	int costSoFar=0; //Total final cost of the path.
+	int n_Expanded = 0; //Total number of nodes expanded.
 	long execTime = 0; //Total execution time of the search.
-	static int n_goals = 0; //Total number of goals.
-	static String H_name; //Name of the heuristic A* is going to use.
+	int n_goals = 0; //Total number of goals.
+	String H_name; //Name of the heuristic A* is going to use.
 
 	public ArrayList<Integer> getOrder(){
 		return order;

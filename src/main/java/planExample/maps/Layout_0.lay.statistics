@@ -2,7 +2,7 @@ Statistics:
 
 Type of movement: Vertical, Horizontal and Diagonal.
 Heuristic used: Diagonal distance.
-Execution time: 60 Milliseconds
+Execution time: 32 Milliseconds
 Length of the path: 118
 Number of nodes expanded: 1373
 Total cost: 3091
